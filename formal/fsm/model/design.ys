@@ -1,0 +1,8 @@
+# running in formal/fsm/src/
+read -formal -sv dma_pkg.sv dma_ctrl_fsm.sv fsm_formal.sv
+prep -top fsm_formal
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

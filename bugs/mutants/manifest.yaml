@@ -1,0 +1,28 @@
+mutants:
+  - {id: M01, target: rtl/dma_ctrl_fsm.sv, defect: "length completion off by one beat", result: not_run}
+  - {id: M02, target: rtl/dma_fifo.sv, defect: "accept push while FIFO full", result: not_run}
+  - {id: M03, target: rtl/dma_ctrl_fsm.sv, defect: "treat write SLVERR as OKAY", result: not_run}
+  - {id: M04, target: rtl/dma_ctrl_fsm.sv, defect: "treat read DECERR as SLVERR", result: not_run}
+  - {id: M05, target: rtl/dma_ctrl_fsm.sv, defect: "source 4 KB split uses strict inequality", result: not_run}
+  - {id: M06, target: rtl/dma_ctrl_fsm.sv, defect: "destination 4 KB limit omitted", result: not_run}
+  - {id: M07, target: rtl/dma_read_engine.sv, defect: "RLAST accepted one beat early", result: not_run}
+  - {id: M08, target: rtl/dma_write_engine.sv, defect: "WLAST asserted one beat early", result: not_run}
+  - {id: M09, target: rtl/dma_ctrl_fsm.sv, defect: "BYTES_XFERRED advances before BRESP", result: not_run}
+  - {id: M10, target: rtl/dma_ctrl_fsm.sv, defect: "abort drops a pending read burst", result: not_run}
+  - {id: M11, target: rtl/dma_regs.sv, defect: "START fails to clear stale error status", result: not_run}
+  - {id: M12, target: rtl/dma_regs.sv, defect: "IRQ_CLEAR clears DONE instead of IRQ", result: not_run}
+  - {id: M13, target: rtl/dma_regs.sv, defect: "high source address write targets destination", result: not_run}
+  - {id: M14, target: rtl/dma_regs.sv, defect: "byte strobes ignored on CONFIG", result: not_run}
+  - {id: M15, target: rtl/dma_ctrl_fsm.sv, defect: "adjacent ranges rejected as overlap", result: not_run}
+  - {id: M16, target: rtl/dma_ctrl_fsm.sv, defect: "overlapping ranges accepted", result: not_run}
+  - {id: M17, target: rtl/dma_crc32.sv, defect: "CRC initial value set to zero", result: not_run}
+  - {id: M18, target: rtl/dma_crc32.sv, defect: "CRC byte order reversed within a beat", result: not_run}
+  - {id: M19, target: rtl/dma_read_engine.sv, defect: "RRESP checked only on final beat", result: not_run}
+  - {id: M20, target: rtl/dma_write_engine.sv, defect: "WVALID changes payload while stalled", result: not_run}
+  - {id: M21, target: rtl/dma_fifo.sv, defect: "simultaneous push and pop changes occupancy", result: not_run}
+  - {id: M22, target: rtl/dma_fifo.sv, defect: "read pointer fails to wrap", result: not_run}
+  - {id: M23, target: rtl/dma_ctrl_fsm.sv, defect: "remaining length uses programmed rather than captured value", result: not_run}
+  - {id: M24, target: rtl/dma_ctrl_fsm.sv, defect: "reprogramming changes active destination", result: not_run}
+  - {id: M25, target: rtl/dma_regs.sv, defect: "reserved CONFIG bits read back nonzero", result: not_run}
+  - {id: M26, target: rtl/dma_ctrl_fsm.sv, defect: "zero length launches one burst", result: not_run}
+  - {id: M27, target: rtl/dma_write_engine.sv, defect: "write response accepted before final data beat", result: not_run}

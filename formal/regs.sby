@@ -1,0 +1,14 @@
+[options]
+mode prove
+depth 24
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal -sv dma_regs.sv regs_formal.sv
+prep -top regs_formal
+
+[files]
+rtl/dma_regs.sv
+formal/regs_formal.sv

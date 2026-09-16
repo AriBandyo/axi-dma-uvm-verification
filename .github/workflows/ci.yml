@@ -1,0 +1,40 @@
+name: veridma-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-and-model:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator iverilog g++ python3 python3-yaml
+      - name: Repository structure
+        run: make structure-check
+      - name: RTL lint
+        run: make lint
+      - name: Directed RTL smoke
+        run: make rtl-smoke
+      - name: C++ reference model
+        run: make cpp-test
+      - name: Regression tooling tests
+        run: make script-test
+      - name: Smoke profile planning
+        run: python3 scripts/run_regression.py --profile smoke --dry-run
+
+  formal:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install formal dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yosys boolector git make python3
+          git clone --depth 1 https://github.com/YosysHQ/sby.git "$RUNNER_TEMP/sby"
+          echo "$RUNNER_TEMP/sby/sbysrc" >> "$GITHUB_PATH"
+      - name: Formal properties
+        run: make formal

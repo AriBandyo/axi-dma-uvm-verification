@@ -1,0 +1,15 @@
+[options]
+mode prove
+depth 32
+multiclock off
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal -sv dma_fifo.sv fifo_formal.sv
+prep -top fifo_formal
+
+[files]
+rtl/dma_fifo.sv
+formal/fifo_formal.sv

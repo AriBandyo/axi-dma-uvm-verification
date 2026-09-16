@@ -1,0 +1,15 @@
+[options]
+mode prove
+depth 96
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal -sv dma_pkg.sv dma_ctrl_fsm.sv fsm_formal.sv
+prep -top fsm_formal
+
+[files]
+rtl/dma_pkg.sv
+rtl/dma_ctrl_fsm.sv
+formal/fsm_formal.sv

@@ -1,0 +1,27 @@
+profiles:
+  smoke:
+    repetitions: 20
+    tests:
+      - dma_smoke_test
+      - dma_register_test
+      - dma_illegal_test
+    timeout_seconds: 90
+  nightly:
+    repetitions: 1000
+    tests:
+      - dma_random_test
+      - dma_4kb_test
+      - dma_abort_test
+      - dma_reset_test
+      - dma_error_test
+      - dma_ordering_test
+    timeout_seconds: 300
+  soak:
+    repetitions: 10000
+    tests:
+      - dma_random_test
+      - dma_abort_test
+      - dma_reset_test
+      - dma_error_test
+      - dma_ordering_test
+    timeout_seconds: 600
