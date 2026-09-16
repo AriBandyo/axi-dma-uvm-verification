@@ -30,12 +30,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install formal dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y yosys boolector git make python3
-          git clone --depth 1 https://github.com/YosysHQ/sby.git "$RUNNER_TEMP/sby"
-          sudo install -m 0755 "$RUNNER_TEMP/sby/sbysrc/sby.py" /usr/local/bin/sby
-          echo "$RUNNER_TEMP/sby/sbysrc" >> "$GITHUB_PATH"
+      - name: Install OSS CAD Suite
+        uses: YosysHQ/setup-oss-cad-suite@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Formal properties
         run: make formal
