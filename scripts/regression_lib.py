@@ -60,6 +60,17 @@ def build_plan(profile: str, tests: list[str], repetitions: int) -> list[RunSpec
 
 def extract_failure_signature(log_text: str) -> str | None:
     for line in log_text.splitlines():
+        summary_match = re.fullmatch(
+            r"\s*UVM_(ERROR|FATAL)\s*:\s*(\d+)\s*",
+            line,
+        )
+        if summary_match:
+            severity, count_text = summary_match.groups()
+            count = int(count_text)
+            if count == 0:
+                continue
+            return f"UVM_{severity} count {count}"
+
         for pattern in ERROR_PATTERNS:
             match = pattern.search(line)
             if match:

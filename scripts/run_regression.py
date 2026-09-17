@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import os
 import shutil
 import subprocess
 import sys
@@ -31,13 +32,25 @@ def load_profile(name: str) -> dict:
 def run_one(spec, run_directory: Path, timeout_seconds: int) -> RunResult:
     log_path = run_directory / "logs" / f"{spec.index:05d}_{spec.test}_{spec.seed}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    command = [
-        "make",
-        "test",
-        f"TEST={spec.test}",
-        f"SEED={spec.seed}",
-        f"RESULT_DIR={run_directory.relative_to(REPOSITORY_ROOT)}",
-    ]
+    if os.name == "nt":
+        batch_file = REPOSITORY_ROOT / "scripts" / "windows_xsim.bat"
+        command = [
+            "cmd.exe",
+            "/d",
+            "/c",
+            str(batch_file),
+            "test",
+            spec.test,
+            str(spec.seed),
+        ]
+    else:
+        command = [
+            "make",
+            "test",
+            f"TEST={spec.test}",
+            f"SEED={spec.seed}",
+            f"RESULT_DIR={run_directory.relative_to(REPOSITORY_ROOT)}",
+        ]
     started = time.monotonic()
     try:
         completed = subprocess.run(
@@ -96,11 +109,18 @@ def main() -> int:
         print("Vivado xsim tools were not found in PATH", file=sys.stderr)
         return 2
 
-    compile_result = subprocess.run(["make", "compile"], cwd=REPOSITORY_ROOT, check=False)
-    if compile_result.returncode != 0:
-        return compile_result.returncode
+    if os.name != "nt":
+        compile_result = subprocess.run(
+            ["make", "compile"],
+            cwd=REPOSITORY_ROOT,
+            check=False,
+        )
+        if compile_result.returncode != 0:
+            return compile_result.returncode
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.jobs)) as executor:
+    worker_count = 1 if os.name == "nt" else max(1, args.jobs)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
         futures = [
             executor.submit(run_one, spec, run_directory, int(profile["timeout_seconds"]))
             for spec in plan
